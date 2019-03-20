@@ -1,7 +1,6 @@
 import { Stream } from 'stream';
 import { Chart as ChartJS, ChartConfiguration } from 'chart.js';
 import { createCanvas } from 'canvas';
-import * as fresh from 'fresh-require';
 
 export type ChartCallback = (chartJS: typeof ChartJS) => void | Promise<void>;
 
@@ -22,7 +21,7 @@ export class CanvasRenderService {
 
 		this._width = width;
 		this._height = height;
-		this._ChartJs = fresh('chart.js', require) as typeof ChartJS;
+		this._ChartJs = require('chart.js');
 		if (chartCallback) {
 			chartCallback(this._ChartJs);
 		}
@@ -40,6 +39,7 @@ export class CanvasRenderService {
 		return new Promise<string>((resolve, reject) => {
 			const canvas = chart.canvas as any;
 			canvas.toDataURL('image/png', (error: Error | null, png: string) => {
+        chart.destroy();
 				if (error) {
 					return reject(error);
 				}
@@ -60,6 +60,7 @@ export class CanvasRenderService {
 		return new Promise<Buffer>((resolve, reject) => {
 			const canvas = chart.canvas as any;
 			canvas.toBuffer((error: Error | null, buffer: Buffer) => {
+        chart.destroy();
 				if (error) {
 					return reject(error);
 				}
