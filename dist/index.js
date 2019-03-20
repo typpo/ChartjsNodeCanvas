@@ -1,6 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const canvas_1 = require("canvas");
+function fresh(file, require) {
+    file = require.resolve(file);
+    var tmp = require.cache[file];
+    delete require.cache[file];
+    var mod = require(file);
+    require.cache[file] = tmp;
+    return mod;
+}
 class CanvasRenderService {
     /**
      * Create a new instance of CanvasRenderService.

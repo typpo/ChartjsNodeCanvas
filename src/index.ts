@@ -4,6 +4,19 @@ import { createCanvas } from 'canvas';
 
 export type ChartCallback = (chartJS?: typeof ChartJS) => void | Promise<void>;
 
+  function fresh(file:string, require:any) {
+   file = require.resolve(file)
+
+   var tmp = require.cache[file]
+   delete require.cache[file]
+
+   var mod = require(file)
+
+   require.cache[file] = tmp
+
+   return mod
+ }
+
 export class CanvasRenderService {
 
 	private readonly _width: number;
@@ -21,8 +34,7 @@ export class CanvasRenderService {
 
 		this._width = width;
 		this._height = height;
-		this._ChartJs = require('chart.js');
-    delete require.cache[require.resolve('chart.js')];
+		this._ChartJs = fresh('chart.js', require);
 		if (chartCallback) {
 			chartCallback(this._ChartJs);
 		}
