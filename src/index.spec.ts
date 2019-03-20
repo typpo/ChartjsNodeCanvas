@@ -51,8 +51,10 @@ describe('app', () => {
 	};
 	const chartCallback: ChartCallback = (ChartJS) => {
 
-		ChartJS.defaults.global.responsive = true;
-		ChartJS.defaults.global.maintainAspectRatio = false;
+    if (ChartJS) {
+      ChartJS.defaults.global.responsive = true;
+      ChartJS.defaults.global.maintainAspectRatio = false;
+    }
 	};
 
 	it('renders image', async () => {

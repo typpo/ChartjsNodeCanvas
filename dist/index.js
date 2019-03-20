@@ -13,9 +13,13 @@ class CanvasRenderService {
         this._width = width;
         this._height = height;
         this._ChartJs = require('chart.js');
+        delete require.cache[require.resolve('chart.js')];
         if (chartCallback) {
             chartCallback(this._ChartJs);
         }
+    }
+    destroy() {
+        this._ChartJs = undefined;
     }
     /**
      * Render to a data url as png.
@@ -75,7 +79,10 @@ class CanvasRenderService {
         configuration.options.animation = false;
         const context = canvas.getContext('2d');
         global.window = {}; //https://github.com/chartjs/Chart.js/pull/5324
-        return new this._ChartJs(context, configuration);
+        if (this._ChartJs) {
+            return new this._ChartJs(context, configuration);
+        }
+        throw "Cannot use after call to destroy()";
     }
 }
 exports.CanvasRenderService = CanvasRenderService;

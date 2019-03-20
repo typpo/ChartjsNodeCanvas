@@ -1,11 +1,11 @@
 /// <reference types="node" />
 import { Stream } from 'stream';
 import { Chart as ChartJS, ChartConfiguration } from 'chart.js';
-export declare type ChartCallback = (chartJS: typeof ChartJS) => void | Promise<void>;
+export declare type ChartCallback = (chartJS?: typeof ChartJS) => void | Promise<void>;
 export declare class CanvasRenderService {
     private readonly _width;
     private readonly _height;
-    private readonly _ChartJs;
+    private _ChartJs?;
     /**
      * Create a new instance of CanvasRenderService.
      *
@@ -14,6 +14,7 @@ export declare class CanvasRenderService {
      * @param chartCallback optional callback which is called once with a new ChartJS global reference.
      */
     constructor(width: number, height: number, chartCallback?: ChartCallback);
+    destroy(): void;
     /**
      * Render to a data url as png.
      * @see https://github.com/Automattic/node-canvas#canvastodataurl

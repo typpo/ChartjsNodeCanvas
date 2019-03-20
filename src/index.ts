@@ -2,13 +2,13 @@ import { Stream } from 'stream';
 import { Chart as ChartJS, ChartConfiguration } from 'chart.js';
 import { createCanvas } from 'canvas';
 
-export type ChartCallback = (chartJS: typeof ChartJS) => void | Promise<void>;
+export type ChartCallback = (chartJS?: typeof ChartJS) => void | Promise<void>;
 
 export class CanvasRenderService {
 
 	private readonly _width: number;
 	private readonly _height: number;
-	private readonly _ChartJs: typeof ChartJS;
+	private _ChartJs?: typeof ChartJS;
 
 	/**
 	 * Create a new instance of CanvasRenderService.
@@ -22,10 +22,15 @@ export class CanvasRenderService {
 		this._width = width;
 		this._height = height;
 		this._ChartJs = require('chart.js');
+    delete require.cache[require.resolve('chart.js')];
 		if (chartCallback) {
 			chartCallback(this._ChartJs);
 		}
 	}
+
+  destroy() {
+    this._ChartJs = undefined;
+  }
 
 	/**
 	 * Render to a data url as png.
@@ -92,6 +97,9 @@ export class CanvasRenderService {
 		configuration.options.animation = false as any;
 		const context = canvas.getContext('2d');
 		(global as any).window = {};	//https://github.com/chartjs/Chart.js/pull/5324
-		return new this._ChartJs(context, configuration);
+    if (this._ChartJs) {
+      return new this._ChartJs(context, configuration);
+    }
+    throw "Cannot use after call to destroy()"
 	}
 }
