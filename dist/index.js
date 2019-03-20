@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const canvas_1 = require("canvas");
+const fresh = require("fresh-require");
 class CanvasRenderService {
     /**
      * Create a new instance of CanvasRenderService.
@@ -12,7 +13,7 @@ class CanvasRenderService {
     constructor(width, height, chartCallback) {
         this._width = width;
         this._height = height;
-        this._ChartJs = require('chart.js');
+        this._ChartJs = fresh('chart.js', require);
         if (chartCallback) {
             chartCallback(this._ChartJs);
         }
@@ -28,7 +29,6 @@ class CanvasRenderService {
         return new Promise((resolve, reject) => {
             const canvas = chart.canvas;
             canvas.toDataURL('image/png', (error, png) => {
-                chart.destroy();
                 if (error) {
                     return reject(error);
                 }
@@ -47,7 +47,6 @@ class CanvasRenderService {
         return new Promise((resolve, reject) => {
             const canvas = chart.canvas;
             canvas.toBuffer((error, buffer) => {
-                chart.destroy();
                 if (error) {
                     return reject(error);
                 }
