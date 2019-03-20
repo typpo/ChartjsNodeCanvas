@@ -20,8 +20,7 @@ class CanvasRenderService {
     constructor(width, height, chartCallback) {
         this._width = width;
         this._height = height;
-        this._ChartJs = require('chart.js');
-        delete require.cache[require.resolve('chart.js')];
+        this._ChartJs = fresh('chart.js', require);
         if (chartCallback) {
             chartCallback(this._ChartJs);
         }
