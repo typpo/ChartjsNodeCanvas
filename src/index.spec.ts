@@ -56,39 +56,39 @@ describe('app', () => {
 	};
 
 	it('renders image', async () => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const image = await canvasRenderService.renderToBuffer(configuration);
 		assert.equal(image instanceof Buffer, true);
 	});
 
 	it.skip('test image', async () => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const image = await canvasRenderService.renderToBuffer(configuration);
 		await writeFileAsync('./test.png', image);
 	});
 
 	it('renders buffer in parallel', async () => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const promises = Array(3).fill(undefined).map(() => canvasRenderService.renderToBuffer(configuration));
 		const images = await Promise.all(promises);
 		images.forEach((image) => assert.equal(image instanceof Buffer, true));
 	});
 
 	it('renders data url', async () => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const dataUrl = await canvasRenderService.renderToDataURL(configuration);
 		assert.equal(dataUrl.startsWith('data:image/png;base64,'), true);
 	});
 
 	it('renders data url in parallel', async () => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const promises = Array(3).fill(undefined).map(() => canvasRenderService.renderToDataURL(configuration));
 		const dataUrls = await Promise.all(promises);
 		dataUrls.forEach((dataUrl) => assert.equal(dataUrl.startsWith('data:image/png;base64,'), true));
 	});
 
 	it('renders stream', (done) => {
-		const canvasRenderService = new CanvasRenderService(width, height, chartCallback);
+		const canvasRenderService = new CanvasRenderService(width, height, undefined, chartCallback);
 		const stream = canvasRenderService.renderToStream(configuration);
 		const data: Array<Buffer> = [];
 		stream.on('data', (chunk: Buffer) => {

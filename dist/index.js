@@ -9,9 +9,10 @@ class CanvasRenderService {
      * @param height The height of the charts to render, in pixles.
      * @param chartCallback optional callback which is called once with a new ChartJS global reference.
      */
-    constructor(width, height, chartCallback) {
+    constructor(width, height, bkg, chartCallback) {
         this._width = width;
         this._height = height;
+        this._bkg = bkg;
         this._ChartJs = require('chart.js');
         if (chartCallback) {
             chartCallback(this._ChartJs);
@@ -74,6 +75,10 @@ class CanvasRenderService {
         configuration.options.responsive = false;
         configuration.options.animation = false;
         const context = canvas.getContext('2d');
+        if (this._bkg) {
+            context.fillStyle = this._bkg;
+            context.fillRect(0, 0, this._width, this._height);
+        }
         global.window = {}; //https://github.com/chartjs/Chart.js/pull/5324
         return new this._ChartJs(context, configuration);
     }
